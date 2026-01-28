@@ -28,6 +28,9 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Connect to Database
 // connectDB(); // Local Storage Mode: DB Disabled due to environment constraints
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log(err));
 
 // Standard Route
 app.get('/', (req, res) => {
