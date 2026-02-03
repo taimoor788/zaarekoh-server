@@ -1,86 +1,80 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { protect, admin } = require('../middleware/authMiddleware');
-
-const messagesFilePath = path.join(__dirname, '../data/messages.js');
-
-const getMessages = () => {
-    delete require.cache[require.resolve(messagesFilePath)];
-    return require(messagesFilePath);
-};
-
-const saveMessages = (messages) => {
-    const content = `const messages = ${JSON.stringify(messages, null, 4)};\n\nmodule.exports = messages;`;
-    fs.writeFileSync(messagesFilePath, content);
-};
+const Message = require('../models/Message');
 
 // @desc    Submit a message
 // @route   POST /api/contact
 // @access  Public
-router.post('/', (req, res) => {
-    const { name, email, message } = req.body;
+router.post('/', async (req, res) => {
+    const { name, email, message, subject } = req.body;
 
     if (!name || !email || !message) {
         res.status(400).json({ message: 'Please provide name, email and message' });
         return;
     }
 
-    const messages = getMessages();
-    const newMessage = {
-        _id: (Math.max(...messages.map(m => parseInt(m._id) || 0), 0) + 1).toString(),
-        name,
-        email,
-        message,
-        isRead: false,
-        createdAt: new Date().toISOString()
-    };
+    try {
+        const newMessage = await Message.create({
+            name,
+            email,
+            subject: subject || 'New Message',
+            message
+        });
 
-    messages.push(newMessage);
-    saveMessages(messages);
-
-    res.status(201).json({ message: 'Message sent successfully' });
+        res.status(201).json({ message: 'Message sent successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
 });
 
 // @desc    Get all messages
 // @route   GET /api/contact
 // @access  Private/Admin
-router.get('/', protect, admin, (req, res) => {
-    const messages = getMessages();
-    res.json(messages);
+router.get('/', protect, admin, async (req, res) => {
+    try {
+        const messages = await Message.find({});
+        res.json(messages);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
 });
 
 // @desc    Mark message as read
 // @route   PUT /api/contact/:id/read
 // @access  Private/Admin
-router.put('/:id/read', protect, admin, (req, res) => {
-    const messages = getMessages();
-    const message = messages.find(m => m._id === req.params.id);
+router.put('/:id/read', protect, admin, async (req, res) => {
+    try {
+        const message = await Message.findById(req.params.id);
 
-    if (message) {
-        message.isRead = true;
-        saveMessages(messages);
-        res.json({ message: 'Message marked as read' });
-    } else {
-        res.status(404).json({ message: 'Message not found' });
+        if (message) {
+            message.isRead = true;
+            await message.save();
+            res.json({ message: 'Message marked as read' });
+        } else {
+            res.status(404).json({ message: 'Message not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
     }
 });
 
 // @desc    Delete a message
 // @route   DELETE /api/contact/:id
 // @access  Private/Admin
-router.delete('/:id', protect, admin, (req, res) => {
-    const messages = getMessages();
-    const updatedMessages = messages.filter(m => m._id !== req.params.id);
+router.delete('/:id', protect, admin, async (req, res) => {
+    try {
+        const message = await Message.findById(req.params.id);
 
-    if (messages.length === updatedMessages.length) {
-        res.status(404).json({ message: 'Message not found' });
-        return;
+        if (message) {
+            await message.deleteOne();
+            res.json({ message: 'Message deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Message not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
     }
-
-    saveMessages(updatedMessages);
-    res.json({ message: 'Message deleted successfully' });
 });
 
 module.exports = router;

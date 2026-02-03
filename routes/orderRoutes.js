@@ -1,95 +1,126 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { protect, admin } = require('../middleware/authMiddleware');
+const Order = require('../models/Order');
 
-// ... existing code ...
+// @desc    Create new order
+// @route   POST /api/orders
+// @access  Private
+router.post('/', protect, async (req, res) => {
+    const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
 
-// @desc    Get all orders
-// @route   GET /api/orders
-// @access  Private/Admin
-router.get('/', protect, admin, (req, res) => {
-    const orders = getOrders();
-    res.json(orders);
+    if (orderItems && orderItems.length === 0) {
+        res.status(400);
+        throw new Error('No order items');
+        return;
+    } else {
+        const order = new Order({
+            orderItems,
+            user: req.user._id,
+            shippingAddress,
+            paymentMethod,
+            itemsPrice,
+            taxPrice,
+            shippingPrice,
+            totalPrice
+        });
+
+        const createdOrder = await order.save();
+
+        res.status(201).json(createdOrder);
+    }
 });
 
-// @desc    Get logged in user orders
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+router.get('/:id', protect, async (req, res) => {
+    const order = await Order.findById(req.params.id).populate('user', 'name email');
 
-const ordersFilePath = path.join(__dirname, '../data/orders.js');
+    if (order) {
+        res.json(order);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+});
 
-const getOrders = () => {
-    delete require.cache[require.resolve(ordersFilePath)];
-    return require(ordersFilePath);
-};
+// @desc    Update order to paid
+// @route   PUT /api/orders/:id/pay
+// @access  Private
+router.put('/:id/pay', protect, async (req, res) => {
+    const order = await Order.findById(req.params.id);
 
-const saveOrders = (orders) => {
-    const content = `const orders = ${JSON.stringify(orders, null, 4)};\n\nmodule.exports = orders;`;
-    fs.writeFileSync(ordersFilePath, content);
-};
+    if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.paymentResult = {
+            id: req.body.id,
+            status: req.body.status,
+            update_time: req.body.update_time,
+            email_address: req.body.email_address
+        };
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+});
+
+// @desc    Update order to delivered
+// @route   PUT /api/orders/:id/deliver
+// @access  Private/Admin
+router.put('/:id/deliver', protect, admin, async (req, res) => {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error('Order not found');
+    }
+});
 
 // @desc    Update order status
 // @route   PUT /api/orders/:id/status
 // @access  Private/Admin
-router.put('/:id/status', protect, admin, (req, res) => {
-    const orders = getOrders();
-    const order = orders.find(o => o._id === req.params.id);
+router.put('/:id/status', protect, admin, async (req, res) => {
+    const order = await Order.findById(req.params.id);
 
     if (order) {
         order.status = req.body.status || order.status;
-        if (req.body.isPaid !== undefined) {
-            order.isPaid = req.body.isPaid;
-        }
-        // If status is set to Paid manually, also set isPaid to true
         if (req.body.status === 'Paid') {
             order.isPaid = true;
+            order.paidAt = Date.now();
         }
 
-        saveOrders(orders);
-        res.json(order);
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
     } else {
         res.status(404).json({ message: 'Order not found' });
     }
 });
 
-// @desc    Create new order
-// @route   POST /api/orders
-// @access  Private
-router.post('/', protect, (req, res) => {
-    const { orderItems, shippingAddress, totalPrice, paymentMethod, paymentScreenshot } = req.body;
-    const orders = getOrders();
-
-    if (orderItems && orderItems.length === 0) {
-        res.status(400).json({ message: 'No order items' });
-        return;
-    }
-
-    const newOrder = {
-        _id: Date.now().toString(),
-        user: req.user._id,
-        orderItems,
-        shippingAddress,
-        totalPrice,
-        paymentMethod: paymentMethod || 'Manual',
-        paymentScreenshot: paymentScreenshot || null,
-        isPaid: false,
-        status: 'Pending', // Default status for manual payment is Pending until verified
-        createdAt: new Date().toISOString(),
-    };
-
-    orders.push(newOrder);
-    saveOrders(orders);
-
-    res.status(201).json(newOrder);
-});
-
 // @desc    Get logged in user orders
 // @route   GET /api/orders/myorders
 // @access  Private
-router.get('/myorders', protect, (req, res) => {
-    const orders = getOrders();
-    const myOrders = orders.filter(o => o.user === req.user._id);
-    res.json(myOrders);
+router.get('/myorders', protect, async (req, res) => {
+    const orders = await Order.find({ user: req.user._id });
+    res.json(orders);
+});
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+router.get('/', protect, admin, async (req, res) => {
+    const orders = await Order.find({}).populate('user', 'id name');
+    res.json(orders);
 });
 
 module.exports = router;

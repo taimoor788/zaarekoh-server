@@ -1,6 +1,5 @@
 const products = [
     {
-        "_id": "3",
         "name": "Gold Grade Shilajit (15g)",
         "image": "http://localhost:5173/images/product-real-closed.jpg",
         "images": [
@@ -15,7 +14,6 @@ const products = [
         "size": "15g"
     },
     {
-        "_id": "4",
         "name": "Modern Pure Extract (50g)",
         "image": "http://localhost:5173/images/product-modern-branded.png",
         "images": [
@@ -30,7 +28,6 @@ const products = [
         "size": "50g"
     },
     {
-        "_id": "5",
         "name": "Himalayan Essence (Nature Edition)",
         "image": "http://localhost:5173/images/product-real-closed.jpg",
         "images": [
@@ -45,7 +42,6 @@ const products = [
         "size": "Unknown"
     },
     {
-        "_id": "6",
         "name": "Royal Gold Reserve",
         "image": "http://localhost:5173/images/product-real-open.jpg",
         "images": [
@@ -60,7 +56,6 @@ const products = [
         "size": "Standard"
     },
     {
-        "_id": "7",
         "name": "Pure Himalayan Shilajit ",
         "price": 1200,
         "description": "Pure Himalayan Shilajit resin. Rich in fulvic acid and minerals. Boosts natural energy and endurance.\n\n",
@@ -73,7 +68,6 @@ const products = [
         "size": "(10g)"
     },
     {
-        "_id": "8",
         "name": "Pure Himalayan Shilajit",
         "price": 1200,
         "description": "Pure Himalayan Shilajit resin. Rich in fulvic acid and minerals. Boosts natural energy and endurance.\n\n",
@@ -88,7 +82,6 @@ const products = [
         "size": "10g"
     },
     {
-        "_id": "9",
         "name": "chitral shiljit",
         "price": 1200,
         "description": "Agar phir bhi disconnect\n\nStrong chances:\n\n🔥 Router overheating\n\n🔌 Adapter faulty\n\n⚙️ RouterOS corrupted\n\n👉 FINAL SOLUTION (100%)\nRouter ko NETINSTALL se fresh OS daalna\nya factory reset.",

@@ -26,11 +26,13 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/learn', require('./routes/learnRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
+const connectDB = require('./config/db');
+
+// ...
+
 // Connect to Database
-// connectDB(); // Local Storage Mode: DB Disabled due to environment constraints
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+// Connect to Database
+connectDB();
 
 // Standard Route
 app.get('/', (req, res) => {
