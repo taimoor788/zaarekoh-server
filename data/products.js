@@ -1,11 +1,11 @@
 const products = [
     {
         "name": "Gold Grade Shilajit (15g)",
-        "image": "http://localhost:5173/images/product-real-closed.jpg",
+        "image": "/images/product-real-closed.jpg",
         "images": [
-            "http://localhost:5173/images/product-real-closed.jpg",
-            "http://localhost:5173/images/product-real-open.jpg",
-            "http://localhost:5173/images/product-modern-branded.png"
+            "/images/product-real-closed.jpg",
+            "/images/product-real-open.jpg",
+            "/images/product-modern-branded.png"
         ],
         "description": "The finest gold grade Shilajit for maximum potency and absorption.",
         "category": "Premium",
@@ -15,11 +15,11 @@ const products = [
     },
     {
         "name": "Modern Pure Extract (50g)",
-        "image": "http://localhost:5173/images/product-modern-branded.png",
+        "image": "/images/product-modern-branded.png",
         "images": [
-            "http://localhost:5173/images/product-modern-branded.png",
-            "http://localhost:5173/images/product-real-open.jpg",
-            "http://localhost:5173/images/product-real-closed.jpg"
+            "/images/product-modern-branded.png",
+            "/images/product-real-open.jpg",
+            "/images/product-real-closed.jpg"
         ],
         "description": "Next-gen concentrated Shilajit extract. Enhanced potency for the modern lifestyle.",
         "category": "Premium",
@@ -29,11 +29,11 @@ const products = [
     },
     {
         "name": "Himalayan Essence (Nature Edition)",
-        "image": "http://localhost:5173/images/product-real-closed.jpg",
+        "image": "/images/product-real-closed.jpg",
         "images": [
-            "http://localhost:5173/images/product-real-closed.jpg",
-            "http://localhost:5173/images/product-real-open.jpg",
-            "http://localhost:5173/images/product-modern-branded.png"
+            "/images/product-real-closed.jpg",
+            "/images/product-real-open.jpg",
+            "/images/product-modern-branded.png"
         ],
         "description": "Raw and unfiltered. The closest you can get to the source.",
         "category": "Nature",
@@ -43,11 +43,11 @@ const products = [
     },
     {
         "name": "Royal Gold Reserve",
-        "image": "http://localhost:5173/images/product-real-open.jpg",
+        "image": "/images/product-real-open.jpg",
         "images": [
-            "http://localhost:5173/images/product-real-open.jpg",
-            "http://localhost:5173/images/product-real-closed.jpg",
-            "http://localhost:5173/images/product-modern-branded.png"
+            "/images/product-real-open.jpg",
+            "/images/product-real-closed.jpg",
+            "/images/product-modern-branded.png"
         ],
         "description": "Limited edition gold-grade harvest. For the true connoisseur.",
         "category": "Luxury",
@@ -59,9 +59,9 @@ const products = [
         "name": "Pure Himalayan Shilajit ",
         "price": 1200,
         "description": "Pure Himalayan Shilajit resin. Rich in fulvic acid and minerals. Boosts natural energy and endurance.\n\n",
-        "image": "http://localhost:5000/uploads/image-1768145138290.png",
+        "image": "/uploads/image-1768145138290.png",
         "images": [
-            "http://localhost:5000/uploads/image-1768145138290.png"
+            "/uploads/image-1768145138290.png"
         ],
         "category": "Nature",
         "countInStock": 100,
@@ -71,11 +71,11 @@ const products = [
         "name": "Pure Himalayan Shilajit",
         "price": 1200,
         "description": "Pure Himalayan Shilajit resin. Rich in fulvic acid and minerals. Boosts natural energy and endurance.\n\n",
-        "image": "http://localhost:5000/uploads/image-1768145807339.png",
+        "image": "/uploads/image-1768145807339.png",
         "images": [
-            "http://localhost:5000/uploads/image-1768145750759.png",
-            "http://localhost:5000/uploads/image-1768145779905.png",
-            "http://localhost:5000/uploads/image-1768145807339.png"
+            "/uploads/image-1768145750759.png",
+            "/uploads/image-1768145779905.png",
+            "/uploads/image-1768145807339.png"
         ],
         "category": "Nature",
         "countInStock": 150,
@@ -85,11 +85,11 @@ const products = [
         "name": "chitral shiljit",
         "price": 1200,
         "description": "Agar phir bhi disconnect\n\nStrong chances:\n\n🔥 Router overheating\n\n🔌 Adapter faulty\n\n⚙️ RouterOS corrupted\n\n👉 FINAL SOLUTION (100%)\nRouter ko NETINSTALL se fresh OS daalna\nya factory reset.",
-        "image": "http://localhost:5000/uploads/image-1768930453051.jpg",
+        "image": "/uploads/image-1768930453051.jpg",
         "images": [
-            "http://localhost:5000/uploads/image-1768930438327.jpg",
-            "http://localhost:5000/uploads/image-1768930453051.jpg",
-            "http://localhost:5000/uploads/image-1768930500081.jpg"
+            "/uploads/image-1768930438327.jpg",
+            "/uploads/image-1768930453051.jpg",
+            "/uploads/image-1768930500081.jpg"
         ],
         "category": "nature",
         "countInStock": 100,
