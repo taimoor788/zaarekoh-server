@@ -7,7 +7,7 @@ const Order = require('../models/Order');
 // @route   POST /api/orders
 // @access  Private
 router.post('/', protect, async (req, res) => {
-    const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice } = req.body;
+    const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice, paymentScreenshot } = req.body;
 
     if (orderItems && orderItems.length === 0) {
         res.status(400);
@@ -22,13 +22,22 @@ router.post('/', protect, async (req, res) => {
             itemsPrice,
             taxPrice,
             shippingPrice,
-            totalPrice
+            totalPrice,
+            paymentScreenshot
         });
 
         const createdOrder = await order.save();
 
         res.status(201).json(createdOrder);
     }
+});
+
+// @desc    Get logged in user orders
+// @route   GET /api/orders/myorders
+// @access  Private
+router.get('/myorders', protect, async (req, res) => {
+    const orders = await Order.find({ user: req.user._id });
+    res.json(orders);
 });
 
 // @desc    Get order by ID
@@ -95,7 +104,9 @@ router.put('/:id/status', protect, admin, async (req, res) => {
 
     if (order) {
         order.status = req.body.status || order.status;
-        if (req.body.status === 'Paid') {
+
+        // Handle payment approval separately from status
+        if (req.body.isPaid || req.body.status === 'Paid') {
             order.isPaid = true;
             order.paidAt = Date.now();
         }
@@ -107,13 +118,7 @@ router.put('/:id/status', protect, admin, async (req, res) => {
     }
 });
 
-// @desc    Get logged in user orders
-// @route   GET /api/orders/myorders
-// @access  Private
-router.get('/myorders', protect, async (req, res) => {
-    const orders = await Order.find({ user: req.user._id });
-    res.json(orders);
-});
+
 
 // @desc    Get all orders
 // @route   GET /api/orders

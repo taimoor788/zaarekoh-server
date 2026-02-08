@@ -75,6 +75,9 @@ const orderSchema = mongoose.Schema({
         type: String,
         default: 'Pending',
         enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+    },
+    paymentScreenshot: {
+        type: String,
     }
 }, {
     timestamps: true,
